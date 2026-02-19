@@ -1,397 +1,522 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌙 Pantauan Ibadah Ramadhan 1447 H</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{--gold:#F5A623;--gold-light:#FFD580;--teal:#0B7A6E;--teal-light:#13A693;--cream:#FFF8EC;--night:#0D1B2A;--night2:#1A2E45;--star:#FFE566;--red:#E85D4A;--green:#3DBD7D;--purple:#7C5CBF;--purple-light:#A87FE8;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Nunito',sans-serif;background:var(--night);color:var(--cream);min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;animation:twinkle 4s ease-in-out infinite alternate;background-image:radial-gradient(1px 1px at 10% 20%,var(--star) 0%,transparent 100%),radial-gradient(2px 2px at 50% 30%,var(--star) 0%,transparent 100%),radial-gradient(1px 1px at 70% 15%,white 0%,transparent 100%),radial-gradient(2px 2px at 90% 40%,var(--star) 0%,transparent 100%),radial-gradient(1px 1px at 45% 60%,white 0%,transparent 100%),radial-gradient(2px 2px at 75% 85%,var(--star) 0%,transparent 100%);}
-  @keyframes twinkle{0%{opacity:.6}100%{opacity:1}}
-  .container{max-width:900px;margin:0 auto;padding:20px;position:relative;z-index:1;}
-  .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-  .login-card{background:var(--night2);border:2px solid var(--teal);border-radius:24px;padding:36px 32px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(11,122,110,.15);text-align:center;}
-  .login-moon{font-size:64px;display:block;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 20px var(--gold));margin-bottom:12px;}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-  .login-card h1{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2;}
-  .login-card .school{font-size:.95rem;color:var(--cream);margin-top:8px;font-weight:600;}
-  .login-card .teacher{font-size:.8rem;color:rgba(255,248,236,.5);margin-top:3px;font-style:italic;}
-  .login-card .tagline{font-size:.85rem;color:var(--gold-light);margin-top:10px;}
-  .login-form{margin-top:26px;display:flex;flex-direction:column;gap:14px;text-align:left;}
-  .login-form label{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--teal-light);font-weight:700;display:block;margin-bottom:4px;}
-  .login-form input,.login-form select{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(19,166,147,.3);border-radius:12px;padding:12px 14px;color:var(--cream);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;outline:none;transition:border-color .2s;}
-  .login-form input:focus,.login-form select:focus{border-color:var(--teal-light);}
-  .login-form select option{background:#1A2E45;}
-  .login-btn{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--gold),#E8950A);color:var(--night);font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(245,166,35,.4);}
-  .login-btn:hover{transform:translateY(-2px);}
-  .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-  .app-screen{display:none;}
-  .top-bar{background:var(--night2);border-bottom:2px solid rgba(255,255,255,.06);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.3);}
-  .user-info{display:flex;align-items:center;gap:10px;}
-  .avatar{width:36px;height:36px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;font-family:'Baloo 2',cursive;color:var(--gold);}
-  .uname{font-weight:700;font-size:.92rem;}.ukelas{font-size:.72rem;color:rgba(255,248,236,.5);}
-  .top-right{display:flex;align-items:center;gap:10px;}
-  .cloud-badge{font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:99px;}
-  .cloud-badge.saved{background:rgba(61,189,125,.15);color:var(--green);}
-  .cloud-badge.saving{background:rgba(245,166,35,.15);color:var(--gold);}
-  .cloud-badge.err{background:rgba(232,93,74,.15);color:var(--red);}
-  .logout-btn{padding:6px 13px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:transparent;color:rgba(255,248,236,.6);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;}
-  .logout-btn:hover{border-color:var(--red);color:var(--red);}
-  .header{text-align:center;padding:22px 20px 14px;}
-  .header h1{font-family:'Baloo 2',cursive;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:800;color:var(--gold);text-shadow:0 0 30px rgba(245,166,35,.5);line-height:1.2;}
-  .header-school{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:var(--cream);margin-top:6px;}
-  .header-teacher{font-size:.8rem;color:rgba(255,248,236,.5);margin-top:2px;font-style:italic;}
-  .progress-overview{background:linear-gradient(135deg,var(--teal) 0%,#0B5E54 100%);border-radius:20px;padding:16px 20px;margin:14px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;box-shadow:0 8px 30px rgba(11,122,110,.4);}
-  .progress-stat{text-align:center;flex:1;min-width:68px;}
-  .progress-stat .num{font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:800;color:var(--gold);line-height:1;}
-  .progress-stat .lbl{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,248,236,.75);margin-top:2px;}
-  .progress-bar-wrap{flex:2;min-width:130px;}
-  .progress-bar-wrap .bar-label{display:flex;justify-content:space-between;font-size:.75rem;font-weight:700;color:var(--gold-light);margin-bottom:5px;}
-  .progress-bar{height:12px;background:rgba(0,0,0,.3);border-radius:99px;overflow:hidden;}
-  .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#FFC300);border-radius:99px;transition:width .6s ease;}
-  .day-nav{display:flex;align-items:center;gap:12px;margin:18px 0 10px;}
-  .day-nav h2{font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:700;color:var(--gold);flex:1;}
-  .day-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--teal) transparent;}
-  .day-btn{min-width:48px;height:58px;border-radius:13px;border:2px solid rgba(255,255,255,.1);background:var(--night2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .2s;flex-shrink:0;}
-  .day-btn .day-num{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:var(--cream);line-height:1;}
-  .day-btn .day-dots{display:flex;gap:2px;}
-  .day-btn .dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.2);}
-  .day-btn.active{background:var(--teal);border-color:var(--teal-light);box-shadow:0 4px 15px rgba(11,122,110,.5);transform:translateY(-2px);}
-  .day-btn.active .day-num{color:var(--gold);}
-  .day-btn.complete{border-color:var(--green);}
-  .day-btn.complete .day-num{color:var(--green);}
-  .day-btn.locked{opacity:.4;}
-  .day-btn:hover:not(.active):not(.locked){border-color:var(--teal-light);transform:translateY(-1px);}
-  .ibadah-section{background:var(--night2);border-radius:20px;padding:20px 22px;margin:14px 0;border:2px solid rgba(255,255,255,.06);box-shadow:0 8px 30px rgba(0,0,0,.3);}
-  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
-  .section-head h3{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;color:var(--gold-light);display:flex;align-items:center;gap:8px;}
-  .sholat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px;}
-  .sholat-item{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;user-select:none;}
-  .sholat-item:hover{border-color:var(--teal-light);}
-  .sholat-item.checked{background:rgba(61,189,125,.15);border-color:var(--green);}
-  .sholat-item .sholat-icon{font-size:1.4rem;display:block;margin-bottom:3px;}
-  .sholat-item .sholat-name{font-size:.8rem;font-weight:700;color:var(--cream);}
-  .sholat-item .sholat-check{font-size:1rem;margin-top:3px;}
-  .toggle-list{display:flex;flex-direction:column;gap:9px;}
-  .toggle-item{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:all .2s;user-select:none;}
-  .toggle-item:hover{border-color:var(--gold);}
-  .toggle-item.checked{background:rgba(61,189,125,.12);border-color:var(--green);}
-  .toggle-item .t-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px;}
-  .toggle-item .t-content{flex:1;}
-  .toggle-item .t-title{font-weight:700;font-size:.9rem;color:var(--cream);}
-  .toggle-item .t-subtitle{font-size:.73rem;color:rgba(255,248,236,.5);margin-top:2px;}
-  .toggle-item .t-doa{font-size:.73rem;color:rgba(255,220,140,.75);margin-top:4px;font-style:italic;line-height:1.5;}
-  .toggle-item .t-check{width:26px;height:26px;border-radius:50%;border:2.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;flex-shrink:0;margin-top:2px;}
-  .toggle-item.checked .t-check{background:var(--green);border-color:var(--green);}
-  .add-btn{padding:7px 14px;border:none;border-radius:10px;background:var(--teal);color:var(--cream);font-family:'Baloo 2',cursive;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
-  .add-btn:hover{background:var(--teal-light);}
-  .add-btn-purple{background:var(--purple);}
-  .add-btn-purple:hover{background:var(--purple-light);}
-  .dynamic-list{display:flex;flex-direction:column;gap:9px;}
-  .empty-state{text-align:center;padding:16px;color:rgba(255,248,236,.3);font-size:.82rem;border:2px dashed rgba(255,255,255,.08);border-radius:13px;}
-  .tadarus-row{background:rgba(19,166,147,.07);border:2px solid rgba(19,166,147,.2);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-  .hafalan-row{background:rgba(124,92,191,.08);border:2px solid rgba(124,92,191,.2);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-  .row-num{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:800;color:var(--gold);min-width:20px;text-align:center;flex-shrink:0;}
-  .surah-select{flex:1;min-width:150px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:7px 9px;color:var(--cream);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:600;outline:none;cursor:pointer;}
-  .surah-select option{background:#1A2E45;}
-  .ayat-range{display:flex;align-items:center;gap:5px;flex-shrink:0;}
-  .ayat-range label{font-size:.7rem;font-weight:700;color:rgba(255,248,236,.5);white-space:nowrap;}
-  .ayat-range input[type=number]{width:50px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:6px;color:var(--cream);font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:700;text-align:center;outline:none;}
-  .ayat-range .sep{color:rgba(255,248,236,.3);font-size:.8rem;}
-  .ayat-max{font-size:.68rem;color:rgba(255,248,236,.35);white-space:nowrap;}
-  .del-btn{width:27px;height:27px;border-radius:50%;border:none;background:rgba(232,93,74,.2);color:var(--red);font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-  .del-btn:hover{background:rgba(232,93,74,.4);}
-  .tadarus-summary{margin-top:9px;padding:9px 13px;background:rgba(245,166,35,.08);border-radius:10px;border-left:3px solid var(--gold);font-size:.8rem;color:var(--gold-light);font-weight:600;line-height:1.5;}
-  .status-wrap{display:flex;gap:5px;flex-shrink:0;}
-  .status-btn{padding:5px 10px;border-radius:8px;border:2px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,248,236,.4);font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
-  .status-btn.s-belajar{background:rgba(245,166,35,.2);border-color:var(--gold);color:var(--gold);}
-  .status-btn.s-lancar{background:rgba(61,189,125,.2);border-color:var(--green);color:var(--green);}
-  .catatan-wrap textarea{width:100%;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.08);border-radius:13px;padding:11px 15px;color:var(--cream);font-family:'Nunito',sans-serif;font-size:.87rem;resize:vertical;min-height:80px;outline:none;transition:border-color .2s;}
-  .catatan-wrap textarea:focus{border-color:var(--teal-light);}
-  .lock-banner{display:flex;align-items:center;gap:14px;background:rgba(232,93,74,.1);border:2px solid rgba(232,93,74,.3);border-radius:16px;padding:16px 20px;margin:14px 0;}
-  .lock-banner .lock-icon{font-size:2rem;flex-shrink:0;}
-  .lock-banner .lock-text h4{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:var(--red);}
-  .lock-banner .lock-text p{font-size:.78rem;color:rgba(255,248,236,.5);margin-top:3px;}
-  .locked-overlay{pointer-events:none;opacity:.3;user-select:none;filter:grayscale(.5);}
-  .save-btn{width:100%;padding:14px;border:none;border-radius:15px;background:linear-gradient(135deg,var(--gold),#E8950A);color:var(--night);font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(245,166,35,.4);margin-top:8px;}
-  .save-btn:hover{transform:translateY(-2px);}
-  .save-btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
-  .tab-bar{display:flex;gap:8px;margin:18px 0 0;}
-  .tab-btn{padding:9px 16px;border:2px solid rgba(255,255,255,.1);border-radius:12px;background:transparent;color:rgba(255,248,236,.55);font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;}
-  .tab-btn.active{background:var(--teal);border-color:var(--teal);color:var(--cream);}
-  .tab-content{display:none;}.tab-content.active{display:block;}
-  .rekap-table-wrap{overflow-x:auto;border-radius:16px;margin-top:14px;}
-  table{width:100%;border-collapse:collapse;min-width:600px;}
-  thead tr{background:var(--teal);}
-  th{padding:11px 8px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--cream);text-align:center;white-space:nowrap;}
-  td{padding:8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);font-size:.78rem;background:var(--night2);color:var(--cream);}
-  tr:hover td{background:rgba(11,122,110,.1);}
-  td.day-col{font-family:'Baloo 2',cursive;font-weight:700;color:var(--gold-light);}
-  td.left-col{text-align:left;max-width:150px;font-size:.7rem;}
-  .badge{display:inline-block;padding:3px 8px;border-radius:99px;font-size:.68rem;font-weight:700;}
-  .badge-full{background:rgba(61,189,125,.2);color:var(--green);}
-  .badge-partial{background:rgba(245,166,35,.2);color:var(--gold);}
-  .badge-empty{background:rgba(232,93,74,.15);color:var(--red);}
-  .check-yes{color:var(--green);}.check-no{color:rgba(255,255,255,.2);}
-  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:var(--night);padding:11px 22px;border-radius:99px;font-weight:700;font-family:'Baloo 2',cursive;font-size:.9rem;z-index:999;transition:transform .3s ease;box-shadow:0 8px 25px rgba(0,0,0,.4);}
-  .toast.show{transform:translateX(-50%) translateY(0);}
-  .toast.err{background:var(--red);color:white;}
-  @media(max-width:480px){.sholat-grid{grid-template-columns:repeat(3,1fr);}.ayat-range input[type=number]{width:42px;}.progress-stat .num{font-size:1.5rem;}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Absensi Sholat - SD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calendar-section {
+            margin-top: 30px;
+        }
+
+        .calendar-header {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header h3 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .date-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fafafa;
+            transition: all 0.3s;
+        }
+
+        .date-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .date-header {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            color: #1976d2;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .date-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="login-screen" id="login-screen">
-  <div class="login-card">
-    <span class="login-moon">🌙</span>
-    <h1>Pantauan Ibadah Ramadhan 1447 H</h1>
-    <div class="school">SD Negeri 1 Tanggulturus</div>
-    <div class="teacher">Guru PAI: Gerry Lanang Yufrantono, S.Pd.</div>
-    <div class="tagline">Semangat beribadah di bulan suci! ✨</div>
-    <div class="login-form">
-      <div><label>👤 Nama Lengkap</label><input type="text" id="login-nama" placeholder="Ketik nama kamu..." autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <div><label>🏫 Kelas</label>
-        <select id="login-kelas">
-          <option value="">-- Pilih Kelas --</option>
-          <option>Kelas 1</option><option>Kelas 2</option><option>Kelas 3</option>
-          <option>Kelas 4</option><option>Kelas 5</option><option>Kelas 6</option>
-        </select>
-      </div>
-      <button class="login-btn" id="login-btn" onclick="doLogin()">Mulai Mengisi Ibadah 🚀</button>
-    </div>
-  </div>
-</div>
-
-<div class="app-screen" id="app-screen">
-  <div class="top-bar">
-    <div class="user-info">
-      <div class="avatar" id="top-avatar">?</div>
-      <div><div class="uname" id="top-nama">-</div><div class="ukelas" id="top-kelas">-</div></div>
-    </div>
-    <div class="top-right">
-      <span class="cloud-badge saved" id="cloud-badge">☁️ Tersimpan</span>
-      <button class="logout-btn" onclick="doLogout()">Keluar</button>
-    </div>
-  </div>
-  <div class="container">
-    <div class="header">
-      <h1>Buku Pantauan Ibadah Ramadhan 1447 H</h1>
-      <div class="header-school">SD Negeri 1 Tanggulturus</div>
-      <div class="header-teacher">Guru PAI: Gerry Lanang Yufrantono, S.Pd.</div>
-    </div>
-    <div class="progress-overview">
-      <div class="progress-stat"><div class="num" id="stat-hari">0</div><div class="lbl">Hari Terisi</div></div>
-      <div class="progress-stat"><div class="num" id="stat-puasa">0</div><div class="lbl">Hari Puasa</div></div>
-      <div class="progress-stat"><div class="num" id="stat-sholat">0</div><div class="lbl">Sholat Sempurna</div></div>
-      <div class="progress-stat"><div class="num" id="stat-ayat">0</div><div class="lbl">Total Ayat</div></div>
-      <div class="progress-bar-wrap">
-        <div class="bar-label"><span>Progress Ramadhan</span><span id="bar-pct">0%</span></div>
-        <div class="progress-bar"><div class="progress-bar-fill" id="bar-fill" style="width:0%"></div></div>
-      </div>
-    </div>
-    <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('isi')">✏️ Isi Ibadah</button>
-      <button class="tab-btn" onclick="switchTab('rekap')">📊 Rekapku</button>
-    </div>
-    <div id="tab-isi" class="tab-content active">
-      <div class="day-nav"><h2 id="day-title">Hari ke-1</h2></div>
-      <div class="day-scroll" id="day-scroll"></div>
-      <div id="lock-banner" class="lock-banner" style="display:none">
-        <span class="lock-icon">🔒</span>
-        <div class="lock-text"><h4>Hari ini belum bisa diisi</h4><p>Halaman ini akan terbuka saat harinya tiba. Tetap semangat! 😊</p></div>
-      </div>
-      <div id="day-content-wrap">
-        <div class="ibadah-section">
-          <div class="section-head"><h3>🕌 Sholat 5 Waktu</h3></div>
-          <div class="sholat-grid">
-            <div class="sholat-item" data-sholat="subuh" onclick="toggleSholat('subuh')"><span class="sholat-icon">🌅</span><div class="sholat-name">Subuh</div><div class="sholat-check" id="chk-subuh">○</div></div>
-            <div class="sholat-item" data-sholat="dzuhur" onclick="toggleSholat('dzuhur')"><span class="sholat-icon">☀️</span><div class="sholat-name">Dzuhur</div><div class="sholat-check" id="chk-dzuhur">○</div></div>
-            <div class="sholat-item" data-sholat="ashar" onclick="toggleSholat('ashar')"><span class="sholat-icon">🌤</span><div class="sholat-name">Ashar</div><div class="sholat-check" id="chk-ashar">○</div></div>
-            <div class="sholat-item" data-sholat="maghrib" onclick="toggleSholat('maghrib')"><span class="sholat-icon">🌇</span><div class="sholat-name">Maghrib</div><div class="sholat-check" id="chk-maghrib">○</div></div>
-            <div class="sholat-item" data-sholat="isya" onclick="toggleSholat('isya')"><span class="sholat-icon">🌙</span><div class="sholat-name">Isya</div><div class="sholat-check" id="chk-isya">○</div></div>
-          </div>
+    <div class="container">
+        <div class="header">
+            <h1>📿 Absensi Sholat Februari 2026</h1>
+            <p>Sholat Dhuha & Dzuhur</p>
         </div>
-        <div class="ibadah-section">
-          <div class="section-head"><h3>📋 Ibadah Lainnya</h3></div>
-          <div class="toggle-list">
-            <div class="toggle-item" id="item-puasa" onclick="toggleItem('puasa')"><span class="t-icon">🍽️</span><div class="t-content"><div class="t-title">Puasa</div><div class="t-subtitle">Menahan makan & minum dari Subuh hingga Maghrib</div></div><div class="t-check" id="chk-puasa"></div></div>
-            <div class="toggle-item" id="item-tarawih" onclick="toggleItem('tarawih')"><span class="t-icon">🌟</span><div class="t-content"><div class="t-title">Sholat Tarawih</div><div class="t-subtitle">Sholat sunnah malam Ramadhan</div></div><div class="t-check" id="chk-tarawih"></div></div>
-            <div class="toggle-item" id="item-doa-buka" onclick="toggleItem('doa-buka')"><span class="t-icon">🤲</span><div class="t-content"><div class="t-title">Doa Berbuka Puasa</div><div class="t-doa">Allahumma laka shumtu wa bika aamantu wa 'ala rizqika afthartu. Birahmatika yaa arhamar roohimin.</div></div><div class="t-check" id="chk-doa-buka"></div></div>
-            <div class="toggle-item" id="item-niat-puasa" onclick="toggleItem('niat-puasa')"><span class="t-icon">📿</span><div class="t-content"><div class="t-title">Niat Puasa</div><div class="t-doa">Nawaitu shauma ghadin 'an adā'i fardhi syahri Ramadhāna hādzihis sanati lillāhi ta'ālā.</div></div><div class="t-check" id="chk-niat-puasa"></div></div>
-          </div>
+
+        <div class="content">
+            <div id="successMessage" class="success-message"></div>
+            <div id="errorMessage" class="error-message"></div>
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Mengirim data...</p>
+            </div>
+
+            <div class="info-box">
+                <p><strong>📌 Petunjuk:</strong> Isi nama dan kelas, lalu centang sholat yang sudah dikerjakan setiap hari. Klik tombol "Kirim Absensi" untuk menyimpan data ke Google Sheets.</p>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kelas">Kelas</label>
+                    <select id="kelas" required>
+                        <option value="">Pilih Kelas</option>
+                        <option value="1A">Kelas 1A</option>
+                        <option value="1B">Kelas 1B</option>
+                        <option value="2A">Kelas 2A</option>
+                        <option value="2B">Kelas 2B</option>
+                        <option value="3A">Kelas 3A</option>
+                        <option value="3B">Kelas 3B</option>
+                        <option value="4A">Kelas 4A</option>
+                        <option value="4B">Kelas 4B</option>
+                        <option value="5A">Kelas 5A</option>
+                        <option value="5B">Kelas 5B</option>
+                        <option value="6A">Kelas 6A</option>
+                        <option value="6B">Kelas 6B</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <h3>Centang Sholat yang Sudah Dikerjakan</h3>
+                    <p style="color: #666; font-size: 14px;">Tandai setiap hari setelah melaksanakan sholat</p>
+                </div>
+
+                <div id="dateGrid" class="date-grid"></div>
+
+                <div class="stats" id="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statDhuha">0</div>
+                        <div class="stat-label">Sholat Dhuha</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statDzuhur">0</div>
+                        <div class="stat-label">Sholat Dzuhur</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" id="submitBtn" onclick="simpanAbsensi()">💾 Kirim Absensi ke Google Sheets</button>
         </div>
-        <div class="ibadah-section">
-          <div class="section-head"><h3>📖 Tadarus Al-Qur'an</h3><button class="add-btn" onclick="addTadarusRow()">＋ Tambah Surah</button></div>
-          <div class="dynamic-list" id="tadarus-list"></div>
-          <div id="tadarus-summary" class="tadarus-summary" style="display:none"></div>
-        </div>
-        <div class="ibadah-section">
-          <div class="section-head"><h3>🧠 Hafalan Surah</h3><button class="add-btn add-btn-purple" onclick="addHafalanRow()">＋ Tambah Hafalan</button></div>
-          <div class="dynamic-list" id="hafalan-list"></div>
-        </div>
-        <div class="ibadah-section">
-          <div class="section-head"><h3>📝 Catatan Hari Ini</h3></div>
-          <div class="catatan-wrap"><textarea id="catatan-input" placeholder="Tuliskan cerita atau perasaan kamu hari ini..."></textarea></div>
-        </div>
-        <button class="save-btn" id="save-btn" onclick="saveDay()">💾 Simpan & Kirim ke Guru</button>
-      </div>
     </div>
-    <div id="tab-rekap" class="tab-content">
-      <div class="rekap-table-wrap">
-        <table>
-          <thead><tr><th>Hari</th><th>Puasa</th><th>Subuh</th><th>Dzuhur</th><th>Ashar</th><th>Maghrib</th><th>Isya</th><th>Tarawih</th><th>Doa Buka</th><th>Niat</th><th>Ayat</th><th>Hafalan</th><th>Status</th></tr></thead>
-          <tbody id="rekap-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
 
-<script>
-// =====================================================
-// 🔧 TEMPEL URL APPS SCRIPT KAMU DI SINI
-// =====================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbz1LPkxTJ4li04qFcAHtq0yUPIx7F7HDu4IZJFFYOvOmW7quXhe0d65rxwPUzuuF19Kbw/exec";
-// =====================================================
+    <script>
+        // GANTI URL INI DENGAN WEB APP URL DARI GOOGLE APPS SCRIPT ANDA
+        const GOOGLE_SCRIPT_URL = 'MASUKKAN_URL_GOOGLE_APPS_SCRIPT_ANDA_DISINI';
 
-const SURAH_LIST=[{n:1,nama:"Al-Fatihah",ayat:7},{n:2,nama:"Al-Baqarah",ayat:286},{n:3,nama:"Ali 'Imran",ayat:200},{n:4,nama:"An-Nisa",ayat:176},{n:5,nama:"Al-Ma'idah",ayat:120},{n:36,nama:"Ya Sin",ayat:83},{n:55,nama:"Ar-Rahman",ayat:78},{n:67,nama:"Al-Mulk",ayat:30},{n:78,nama:"An-Naba",ayat:40},{n:87,nama:"Al-A'la",ayat:19},{n:93,nama:"Ad-Duha",ayat:11},{n:94,nama:"Al-Insyirah",ayat:8},{n:95,nama:"At-Tin",ayat:8},{n:96,nama:"Al-'Alaq",ayat:19},{n:97,nama:"Al-Qadr",ayat:5},{n:98,nama:"Al-Bayyinah",ayat:8},{n:99,nama:"Az-Zalzalah",ayat:8},{n:100,nama:"Al-'Adiyat",ayat:11},{n:101,nama:"Al-Qari'ah",ayat:11},{n:102,nama:"At-Takasur",ayat:8},{n:103,nama:"Al-'Asr",ayat:3},{n:104,nama:"Al-Humazah",ayat:9},{n:105,nama:"Al-Fil",ayat:5},{n:106,nama:"Quraisy",ayat:4},{n:107,nama:"Al-Ma'un",ayat:7},{n:108,nama:"Al-Kausar",ayat:3},{n:109,nama:"Al-Kafirun",ayat:6},{n:110,nama:"An-Nasr",ayat:3},{n:111,nama:"Al-Lahab",ayat:5},{n:112,nama:"Al-Ikhlas",ayat:4},{n:113,nama:"Al-Falaq",ayat:5},{n:114,nama:"An-Nas",ayat:6}];
-function getSurah(n){return SURAH_LIST.find(s=>s.n==n)||SURAH_LIST[0];}
-function buildOptions(sel){return SURAH_LIST.map(s=>`<option value="${s.n}"${s.n==sel?' selected':''}>${s.n}. ${s.nama} (${s.ayat} ayat)</option>`).join('');}
+        // Generate tanggal Februari 2026
+        function generateDates() {
+            const dateGrid = document.getElementById('dateGrid');
+            const daysInFebruary = 28;
+            const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+            const startDay = 0;
+            
+            for (let i = 1; i <= daysInFebruary; i++) {
+                const dayOfWeek = (startDay + i - 1) % 7;
+                const dateCard = document.createElement('div');
+                dateCard.className = 'date-card';
+                dateCard.innerHTML = `
+                    <div class="date-header">${days[dayOfWeek]}, ${i} Feb</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dhuha-${i}" onchange="updateStats()">
+                            <label for="dhuha-${i}">Dhuha</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dzuhur-${i}" onchange="updateStats()">
+                            <label for="dzuhur-${i}">Dzuhur</label>
+                        </div>
+                    </div>
+                `;
+                dateGrid.appendChild(dateCard);
+            }
+        }
 
-const TOTAL_DAYS=30,UNLOCKED_DAYS=3;
-const SK=['subuh','dzuhur','ashar','maghrib','isya'],TK=['puasa','tarawih','doa-buka','niat-puasa'];
-let currentDay=1,currentUser=null,dayData={},tadarusRows=[],hafalanRows=[],idSeq=0;
-function isDayLocked(d){return d>UNLOCKED_DAYS;}
-function makeUID(n,k){return(k+'_'+n).toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');}
-function getDayDataLocal(d){return dayData[d]||{sholat:{},puasa:false,tarawih:false,'doa-buka':false,'niat-puasa':false,tadarus:[],hafalan:[],catatan:''};}
+        // Update statistik
+        function updateStats() {
+            let dhuhaCount = 0;
+            let dzuhurCount = 0;
+            
+            for (let i = 1; i <= 28; i++) {
+                if (document.getElementById(`dhuha-${i}`).checked) dhuhaCount++;
+                if (document.getElementById(`dzuhur-${i}`).checked) dzuhurCount++;
+            }
+            
+            document.getElementById('statDhuha').textContent = dhuhaCount;
+            document.getElementById('statDzuhur').textContent = dzuhurCount;
+        }
 
-async function doLogin(){
-  const nama=document.getElementById('login-nama').value.trim();
-  const kelas=document.getElementById('login-kelas').value;
-  if(!nama){showToast('Masukkan nama dulu ya! 😊','err');return;}
-  if(!kelas){showToast('Pilih kelas dulu ya! 😊','err');return;}
-  const btn=document.getElementById('login-btn');
-  btn.disabled=true;btn.textContent='Memuat data...';
-  currentUser={nama,kelas,uid:makeUID(nama,kelas)};
-  localStorage.setItem('ramadhan_user_gs',JSON.stringify(currentUser));
-  await loadFromServer();
-  initApp();
-  btn.disabled=false;btn.textContent='Mulai Mengisi Ibadah 🚀';
-}
+        // Simpan absensi ke Google Sheets
+        async function simpanAbsensi() {
+            const nama = document.getElementById('nama').value.trim();
+            const kelas = document.getElementById('kelas').value;
+            
+            if (!nama) {
+                showError('Mohon isi nama lengkap!');
+                return;
+            }
+            
+            if (!kelas) {
+                showError('Mohon pilih kelas!');
+                return;
+            }
 
-async function loadFromServer(){
-  try{
-    const res=await fetch(`${API_URL}?action=loadStudent&uid=${encodeURIComponent(currentUser.uid)}`);
-    const json=await res.json();
-    if(json.success&&json.days){Object.entries(json.days).forEach(([h,d])=>{dayData[parseInt(h)]=d;});}
-  }catch(e){
-    try{const raw=localStorage.getItem('days_'+currentUser.uid);if(raw)dayData=JSON.parse(raw);}catch(e2){}
-  }
-}
+            if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbz1LPkxTJ4li04qFcAHtq0yUPIx7F7HDu4IZJFFYOvOmW7quXhe0d65rxwPUzuuF19Kbw/exec') {
+                showError('URL Google Apps Script belum diatur! Silakan hubungi guru untuk setup.');
+                return;
+            }
+            
+            // Kumpulkan data absensi
+            const absensiData = [];
+            
+            for (let i = 1; i <= 28; i++) {
+                const dhuha = document.getElementById(`dhuha-${i}`).checked ? 'Ya' : 'Tidak';
+                const dzuhur = document.getElementById(`dzuhur-${i}`).checked ? 'Ya' : 'Tidak';
+                
+                absensiData.push({
+                    tanggal: i,
+                    dhuha: dhuha,
+                    dzuhur: dzuhur
+                });
+            }
 
-function initApp(){
-  document.getElementById('top-nama').textContent=currentUser.nama;
-  document.getElementById('top-kelas').textContent=currentUser.kelas;
-  document.getElementById('top-avatar').textContent=currentUser.nama[0].toUpperCase();
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app-screen').style.display='block';
-  loadDay(1);updateStats();buildRekap();
-}
+            const submitData = {
+                nama: nama,
+                kelas: kelas,
+                waktu_submit: new Date().toLocaleString('id-ID'),
+                absensi: absensiData
+            };
+            
+            // Tampilkan loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submitData)
+                });
+                
+                // Simpan juga ke localStorage sebagai backup
+                const key = `absensi_${nama}_${kelas}`.replace(/\s/g, '_');
+                localStorage.setItem(key, JSON.stringify(submitData));
+                
+                showSuccess('✅ Absensi berhasil dikirim ke Google Sheets!');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Gagal mengirim data. Mohon coba lagi atau hubungi guru.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+            }
+        }
 
-function doLogout(){
-  localStorage.removeItem('ramadhan_user_gs');
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('app-screen').style.display='none';
-  currentUser=null;dayData={};
-}
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.textContent = message;
+            successMsg.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
+        }
 
-async function saveDay(){
-  if(isDayLocked(currentDay))return;
-  const d={sholat:{},puasa:false,tarawih:false,'doa-buka':false,'niat-puasa':false,tadarus:[],hafalan:[],catatan:''};
-  SK.forEach(s=>{d.sholat[s]=document.querySelector(`[data-sholat="${s}"]`).classList.contains('checked');});
-  TK.forEach(t=>{d[t]=document.getElementById(`item-${t}`).classList.contains('checked');});
-  tadarusRows.forEach(r=>{const fi=document.getElementById(`tf-${r.id}`),ti=document.getElementById(`tt-${r.id}`);d.tadarus.push({surahN:r.surahN,ayatFrom:fi?+fi.value:r.ayatFrom,ayatTo:ti?+ti.value:r.ayatTo});});
-  hafalanRows.forEach(r=>{d.hafalan.push({surahN:r.surahN,status:r.status});});
-  d.catatan=document.getElementById('catatan-input').value;
-  dayData[currentDay]=d;
-  localStorage.setItem('days_'+currentUser.uid,JSON.stringify(dayData));
-  setCloud('saving');
-  const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='⏳ Menyimpan...';
-  try{
-    await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'saveDay',uid:currentUser.uid,nama:currentUser.nama,kelas:currentUser.kelas,hari:currentDay,data:d})});
-    setCloud('saved');showToast('✅ Berhasil dikirim ke Guru!');
-  }catch(e){setCloud('err');showToast('⚠️ Tersimpan lokal, cek koneksi','err');}
-  btn.disabled=false;btn.textContent='💾 Simpan & Kirim ke Guru';
-  updateStats();buildDayScroll();buildRekap();
-}
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = '❌ ' + message;
+            errorMsg.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 5000);
+        }
 
-function setCloud(s){const el=document.getElementById('cloud-badge');el.className='cloud-badge '+s;el.textContent=s==='saving'?'⏳ Menyimpan...':s==='saved'?'☁️ Tersimpan':'⚠️ Gagal kirim';}
+        // Load data dari localStorage jika ada
+        function loadData() {
+            const nama = document.getElementById('nama').value.trim();
+            const kelas = document.getElementById('kelas').value;
+            
+            if (!nama || !kelas) return;
+            
+            const key = `absensi_${nama}_${kelas}`.replace(/\s/g, '_');
+            const savedData = localStorage.getItem(key);
+            
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                if (data.absensi) {
+                    data.absensi.forEach((item, index) => {
+                        const tanggal = index + 1;
+                        document.getElementById(`dhuha-${tanggal}`).checked = item.dhuha === 'Ya';
+                        document.getElementById(`dzuhur-${tanggal}`).checked = item.dzuhur === 'Ya';
+                    });
+                }
+                
+                updateStats();
+            }
+        }
 
-function loadDay(d){
-  currentDay=d;const dd=getDayDataLocal(d);
-  document.getElementById('day-title').textContent=`Hari ke-${d} Ramadhan`;
-  SK.forEach(s=>{const el=document.querySelector(`[data-sholat="${s}"]`);const v=dd.sholat?dd.sholat[s]||false:false;el.classList.toggle('checked',v);document.getElementById(`chk-${s}`).textContent=v?'✅':'○';});
-  TK.forEach(t=>{const el=document.getElementById(`item-${t}`);const v=dd[t]||false;el.classList.toggle('checked',v);document.getElementById(`chk-${t}`).textContent=v?'✓':'';});
-  tadarusRows=[];idSeq=0;(dd.tadarus||[]).forEach(t=>{idSeq++;tadarusRows.push({id:idSeq,surahN:t.surahN||1,ayatFrom:t.ayatFrom||1,ayatTo:t.ayatTo||1});});renderTadarus();
-  hafalanRows=[];(dd.hafalan||[]).forEach(h=>{idSeq++;hafalanRows.push({id:idSeq,surahN:h.surahN||114,status:h.status||'belajar'});});renderHafalan();
-  document.getElementById('catatan-input').value=dd.catatan||'';
-  const locked=isDayLocked(d);
-  document.getElementById('lock-banner').style.display=locked?'':'none';
-  document.getElementById('day-content-wrap').classList.toggle('locked-overlay',locked);
-  document.getElementById('save-btn').disabled=locked;
-  buildDayScroll();
-}
+        // Event listeners
+        document.getElementById('nama').addEventListener('blur', loadData);
+        document.getElementById('kelas').addEventListener('change', loadData);
 
-function toggleSholat(n){const el=document.querySelector(`[data-sholat="${n}"]`);const v=el.classList.toggle('checked');document.getElementById(`chk-${n}`).textContent=v?'✅':'○';}
-function toggleItem(n){const el=document.getElementById(`item-${n}`);const v=el.classList.toggle('checked');document.getElementById(`chk-${n}`).textContent=v?'✓':'';}
-function addTadarusRow(sN=1,aF=1,aT=null){const s=getSurah(sN);const id=++idSeq;tadarusRows.push({id,surahN:sN,ayatFrom:aF,ayatTo:aT||s.ayat});renderTadarus();}
-function removeTadarusRow(id){tadarusRows=tadarusRows.filter(r=>r.id!==id);renderTadarus();}
-function onTadarusSurah(id,val){const row=tadarusRows.find(r=>r.id===id);if(!row)return;row.surahN=+val;const s=getSurah(+val);row.ayatFrom=1;row.ayatTo=s.ayat;renderTadarus();}
-function onTadarusAyat(id){const row=tadarusRows.find(r=>r.id===id);if(!row)return;const fi=document.getElementById(`tf-${id}`),ti=document.getElementById(`tt-${id}`);if(fi)row.ayatFrom=+fi.value||1;if(ti)row.ayatTo=+ti.value||1;updateTadarusSummary();}
-function renderTadarus(){
-  const list=document.getElementById('tadarus-list');list.innerHTML='';
-  if(!tadarusRows.length){list.innerHTML='<div class="empty-state">Klik <strong>＋ Tambah Surah</strong> untuk mulai! 📖</div>';document.getElementById('tadarus-summary').style.display='none';return;}
-  tadarusRows.forEach((row,idx)=>{const s=getSurah(row.surahN);const maxA=s.ayat;const div=document.createElement('div');div.className='tadarus-row';div.innerHTML=`<span class="row-num">${idx+1}</span><select class="surah-select" onchange="onTadarusSurah(${row.id},this.value)">${buildOptions(row.surahN)}</select><div class="ayat-range"><label>Ayat</label><input type="number" id="tf-${row.id}" min="1" max="${maxA}" value="${Math.min(row.ayatFrom,maxA)}" onchange="onTadarusAyat(${row.id})"><span class="sep">s/d</span><input type="number" id="tt-${row.id}" min="1" max="${maxA}" value="${Math.min(row.ayatTo,maxA)}" onchange="onTadarusAyat(${row.id})"><span class="ayat-max">/${maxA}</span></div><button class="del-btn" onclick="removeTadarusRow(${row.id})">✕</button>`;list.appendChild(div);});
-  updateTadarusSummary();
-}
-function updateTadarusSummary(){
-  const el=document.getElementById('tadarus-summary');if(!tadarusRows.length){el.style.display='none';return;}
-  let total=0;const parts=tadarusRows.map(r=>{const f=+(document.getElementById(`tf-${r.id}`)?.value||r.ayatFrom);const t=+(document.getElementById(`tt-${r.id}`)?.value||r.ayatTo);total+=Math.max(0,t-f+1);return`${getSurah(r.surahN).nama} (${f}–${t})`;});
-  el.style.display='';el.innerHTML=`📊 <strong>Total: ${total} ayat</strong> — ${parts.join(' • ')}`;
-}
-function addHafalanRow(sN=114,status='belajar'){const id=++idSeq;hafalanRows.push({id,surahN:sN,status});renderHafalan();}
-function removeHafalanRow(id){hafalanRows=hafalanRows.filter(r=>r.id!==id);renderHafalan();}
-function setHafalanStatus(id,s){const row=hafalanRows.find(r=>r.id===id);if(row){row.status=s;renderHafalan();}}
-function onHafalanSurah(id,val){const row=hafalanRows.find(r=>r.id===id);if(row)row.surahN=+val;}
-function renderHafalan(){
-  const list=document.getElementById('hafalan-list');list.innerHTML='';
-  if(!hafalanRows.length){list.innerHTML='<div class="empty-state">Klik <strong>＋ Tambah Hafalan</strong> untuk mulai! 🧠</div>';return;}
-  hafalanRows.forEach((row,idx)=>{const div=document.createElement('div');div.className='hafalan-row';div.innerHTML=`<span class="row-num" style="color:var(--purple-light)">${idx+1}</span><select class="surah-select" style="border-color:rgba(124,92,191,.3)" onchange="onHafalanSurah(${row.id},this.value)">${buildOptions(row.surahN)}</select><div class="status-wrap"><button class="status-btn${row.status==='belajar'?' s-belajar':''}" onclick="setHafalanStatus(${row.id},'belajar')">🔄 Belajar</button><button class="status-btn${row.status==='lancar'?' s-lancar':''}" onclick="setHafalanStatus(${row.id},'lancar')">⭐ Lancar</button></div><button class="del-btn" onclick="removeHafalanRow(${row.id})">✕</button>`;list.appendChild(div);});
-}
-function getTotalAyat(dd){return(dd.tadarus||[]).reduce((s,t)=>s+Math.max(0,(t.ayatTo||1)-(t.ayatFrom||1)+1),0);}
-function updateStats(){
-  let hT=0,hP=0,hS=0,tA=0;
-  for(let d=1;d<=TOTAL_DAYS;d++){const dd=getDayDataLocal(d);const ch=(dd.sholat?SK.filter(s=>dd.sholat[s]).length:0)+TK.filter(t=>dd[t]).length;const ay=getTotalAyat(dd);if(ch>0||ay>0)hT++;if(dd.puasa)hP++;if(dd.sholat&&SK.every(s=>dd.sholat[s]))hS++;tA+=ay;}
-  document.getElementById('stat-hari').textContent=hT;document.getElementById('stat-puasa').textContent=hP;document.getElementById('stat-sholat').textContent=hS;document.getElementById('stat-ayat').textContent=tA;
-  const pct=Math.round((hT/TOTAL_DAYS)*100);document.getElementById('bar-fill').style.width=pct+'%';document.getElementById('bar-pct').textContent=pct+'%';
-}
-function buildDayScroll(){
-  const c=document.getElementById('day-scroll');c.innerHTML='';
-  for(let d=1;d<=TOTAL_DAYS;d++){const dd=getDayDataLocal(d);const ch=(dd.sholat?SK.filter(s=>dd.sholat[s]).length:0)+TK.filter(t=>dd[t]).length;const locked=isDayLocked(d);const btn=document.createElement('div');btn.className=`day-btn${d===currentDay?' active':''}${ch>=8?' complete':''}${locked?' locked':''}`;btn.innerHTML=`<span class="day-num">${locked?'🔒':d}</span><div class="day-dots">${locked?'':[0,1,2].map(i=>`<div class="dot" style="${i<Math.min(3,Math.floor(ch/3))?'background:var(--green)':''}"></div>`).join('')}</div>`;btn.onclick=()=>loadDay(d);c.appendChild(btn);}
-  setTimeout(()=>{const a=c.querySelector('.active');if(a)a.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},50);
-}
-function buildRekap(){
-  const tbody=document.getElementById('rekap-body');tbody.innerHTML='';
-  for(let d=1;d<=TOTAL_DAYS;d++){const dd=getDayDataLocal(d);const ch=(dd.sholat?SK.filter(s=>dd.sholat[s]).length:0)+TK.filter(t=>dd[t]).length;const ay=getTotalAyat(dd);const hasData=ch>0||ay>0;const badge=!hasData?`<span class="badge badge-empty">Belum</span>`:ch>=8?`<span class="badge badge-full">Sempurna ⭐</span>`:`<span class="badge badge-partial">Sebagian</span>`;const cv=v=>v?`<span class="check-yes">✓</span>`:`<span class="check-no">−</span>`;const tTxt=(dd.tadarus||[]).map(t=>{const s=getSurah(t.surahN);return`${s.nama} ${t.ayatFrom}–${t.ayatTo}`;}).join(', ')||'−';const hTxt=(dd.hafalan||[]).map(h=>{const s=getSurah(h.surahN);return`${s.nama}${h.status==='lancar'?' ⭐':' 🔄'}`;}).join(', ')||'−';const tr=document.createElement('tr');tr.innerHTML=`<td class="day-col">${d}</td><td>${cv(dd.puasa)}</td><td>${cv(dd.sholat?.subuh)}</td><td>${cv(dd.sholat?.dzuhur)}</td><td>${cv(dd.sholat?.ashar)}</td><td>${cv(dd.sholat?.maghrib)}</td><td>${cv(dd.sholat?.isya)}</td><td>${cv(dd.tarawih)}</td><td>${cv(dd['doa-buka'])}</td><td>${cv(dd['niat-puasa'])}</td><td style="color:var(--gold-light);font-weight:700">${ay||'−'}</td><td class="left-col">${hTxt}</td><td>${badge}</td>`;tbody.appendChild(tr);}
-}
-function switchTab(tab){document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['isi','rekap'][i]===tab));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.getElementById(`tab-${tab}`).classList.add('active');if(tab==='rekap')buildRekap();}
-function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type?' err':'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-
-(async()=>{const saved=localStorage.getItem('ramadhan_user_gs');if(saved){currentUser=JSON.parse(saved);const btn=document.getElementById('login-btn');btn.disabled=true;btn.textContent='Memuat...';await loadFromServer();initApp();btn.disabled=false;btn.textContent='Mulai Mengisi Ibadah 🚀';}})();
-</script>
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            generateDates();
+            updateStats();
+        });
+    </script>
 </body>
 </html>
