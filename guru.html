@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Dashboard Guru – Ramadhan 1447 H</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#F5A623;--gold-light:#FFD580;--teal:#0B7A6E;--teal-light:#13A693;--cream:#FFF8EC;--night:#0A0F1A;--night2:#1A2E45;--red:#E85D4A;--green:#3DBD7D;--purple:#7C5CBF;--blue:#3B82F6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito',sans-serif;background:var(--night);color:var(--cream);min-height:100vh;}
+  .guru-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at top,#0B3A30 0%,var(--night) 60%);}
+  .guru-login-card{background:var(--night2);border:2px solid var(--gold);border-radius:24px;padding:40px 36px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(245,166,35,.08);text-align:center;}
+  .guru-login-card h1{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;color:var(--gold);margin-bottom:6px;}
+  .guru-login-card p{font-size:.85rem;color:rgba(255,248,236,.45);margin-bottom:26px;}
+  .form-group{text-align:left;margin-bottom:14px;}
+  .form-group label{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--teal-light);font-weight:700;display:block;margin-bottom:5px;}
+  .form-group input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(19,166,147,.3);border-radius:12px;padding:12px 14px;color:var(--cream);font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;outline:none;transition:border-color .2s;}
+  .form-group input:focus{border-color:var(--gold);}
+  .guru-login-btn{width:100%;padding:13px;border:none;border-radius:13px;background:linear-gradient(135deg,var(--gold),#E8950A);color:var(--night);font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;cursor:pointer;transition:all .2s;margin-top:6px;}
+  .guru-login-btn:hover{transform:translateY(-2px);}
+  .err-msg{color:var(--red);font-size:.82rem;margin-top:10px;display:none;}
+  .hint{font-size:.7rem;color:rgba(255,248,236,.22);margin-top:14px;}
+
+  .dashboard{display:none;}
+  .topbar{background:var(--night2);border-bottom:2px solid rgba(255,255,255,.06);padding:13px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+  .topbar h1{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--gold);}
+  .topbar .sub{font-size:.72rem;color:rgba(255,248,236,.4);margin-top:1px;}
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+  .tb-btn{padding:8px 15px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn-refresh{background:var(--teal);color:var(--cream);}
+  .btn-refresh:hover{background:var(--teal-light);}
+  .btn-export{background:var(--green);color:var(--night);}
+  .btn-export:hover{opacity:.85;}
+  .btn-logout{background:transparent;border:1.5px solid rgba(255,255,255,.12)!important;color:rgba(255,248,236,.5);border:none;}
+  .btn-logout:hover{border-color:var(--red)!important;color:var(--red);}
+
+  .main{max-width:1400px;margin:0 auto;padding:22px 20px;}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:24px;}
+  .stat-card{background:var(--night2);border-radius:18px;padding:18px;border:2px solid rgba(255,255,255,.06);}
+  .stat-card .s-num{font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;line-height:1;}
+  .stat-card .s-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,248,236,.45);margin-top:5px;}
+  .c-gold .s-num{color:var(--gold);}.c-green .s-num{color:var(--green);}.c-red .s-num{color:var(--red);}.c-blue .s-num{color:var(--blue);}.c-purple .s-num{color:var(--purple);}
+
+  .tab-bar{display:flex;gap:8px;margin-bottom:18px;}
+  .tab-btn{padding:9px 18px;border:2px solid rgba(255,255,255,.1);border-radius:12px;background:transparent;color:rgba(255,248,236,.5);font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;}
+  .tab-btn.active{background:var(--teal);border-color:var(--teal);color:var(--cream);}
+  .tab-content{display:none;}.tab-content.active{display:block;}
+
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+  .filter-select,.search-input{background:var(--night2);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 13px;color:var(--cream);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:600;outline:none;cursor:pointer;}
+  .search-input{flex:1;min-width:170px;cursor:text;}
+  .search-input::placeholder{color:rgba(255,248,236,.28);}
+  .filter-select option{background:#1A2E45;}
+  .filter-select:focus,.search-input:focus{border-color:var(--teal-light);}
+
+  .table-wrap{overflow-x:auto;border-radius:16px;}
+  table{width:100%;border-collapse:collapse;min-width:850px;}
+  thead tr{background:var(--teal);}
+  th{padding:11px 9px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--cream);text-align:center;white-space:nowrap;}
+  th.left{text-align:left;}
+  td{padding:9px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;background:var(--night2);color:var(--cream);}
+  td.left{text-align:left;}
+  tr:hover td{background:rgba(11,122,110,.08);}
+  .badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:.68rem;font-weight:700;}
+  .badge-full{background:rgba(61,189,125,.2);color:var(--green);}
+  .badge-kelas{background:rgba(19,166,147,.2);color:var(--teal-light);}
+  .badge-none{background:rgba(232,93,74,.15);color:var(--red);}
+  .check-y{color:var(--green);}.check-n{color:rgba(255,255,255,.15);}
+  .mini-bar{height:5px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin-top:3px;}
+  .mini-fill{height:100%;border-radius:99px;}
+
+  .detail-panel{background:var(--night2);border:2px solid rgba(255,255,255,.08);border-radius:20px;padding:22px;margin-top:18px;display:none;}
+  .detail-panel.open{display:block;}
+  .detail-panel h3{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:700;color:var(--gold);margin-bottom:14px;}
+  .detail-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:14px;}
+  .ds{background:rgba(255,255,255,.04);border-radius:12px;padding:11px;text-align:center;}
+  .ds .dn{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;color:var(--gold);}
+  .ds .dl{font-size:.68rem;color:rgba(255,248,236,.45);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+  .belum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px;}
+  .belum-card{background:rgba(232,93,74,.08);border:2px solid rgba(232,93,74,.2);border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;}
+  .bc-nama{font-weight:700;font-size:.88rem;}
+  .bc-kelas{font-size:.72rem;color:rgba(255,248,236,.45);margin-top:2px;}
+
+  .chart-section{background:var(--night2);border:2px solid rgba(255,255,255,.06);border-radius:20px;padding:22px;margin-bottom:18px;}
+  .chart-section h3{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:14px;}
+  .bar-chart{display:flex;align-items:flex-end;gap:5px;height:130px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+  .b-bar{width:100%;border-radius:5px 5px 0 0;background:var(--teal);min-height:4px;transition:height .4s;}
+  .b-label{font-size:.6rem;color:rgba(255,248,236,.35);font-weight:700;}
+  .b-val{font-family:'Baloo 2',cursive;font-size:.68rem;color:var(--gold);font-weight:700;}
+  .kelas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px;}
+  .kelas-card{background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.07);border-radius:13px;padding:13px 15px;}
+  .kelas-card h4{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:var(--cream);margin-bottom:9px;}
+  .kr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:.78rem;}
+  .kr .krl{color:rgba(255,248,236,.55);}.kr .krv{font-weight:700;color:var(--gold);}
+
+  .loading-state{text-align:center;padding:60px 20px;color:rgba(255,248,236,.25);font-size:.95rem;}
+  .spin{font-size:2.5rem;animation:spin 1s linear infinite;display:block;margin-bottom:12px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .empty-table{text-align:center;padding:40px;color:rgba(255,248,236,.25);font-size:.88rem;}
+
+  .detail-btn{padding:5px 11px;border:1px solid var(--teal);border-radius:8px;background:transparent;color:var(--teal-light);font-size:.73rem;cursor:pointer;font-weight:700;transition:all .2s;}
+  .detail-btn:hover{background:var(--teal);color:var(--cream);}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:var(--night);padding:10px 22px;border-radius:99px;font-weight:700;font-family:'Baloo 2',cursive;font-size:.88rem;z-index:999;transition:transform .3s;box-shadow:0 8px 25px rgba(0,0,0,.4);}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  @media(max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr);}.btn-export{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="guru-login" id="guru-login">
+  <div class="guru-login-card">
+    <div style="font-size:50px;margin-bottom:12px">👨‍🏫</div>
+    <h1>Dashboard Guru</h1>
+    <p>Pantauan Ibadah Ramadhan 1447 H<br>SD Negeri 1 Tanggulturus</p>
+    <div class="form-group">
+      <label>🔑 Password Guru</label>
+      <input type="password" id="guru-pass" placeholder="Masukkan password..." onkeydown="if(event.key==='Enter')guruLogin()">
+    </div>
+    <button class="guru-login-btn" onclick="guruLogin()">Masuk Dashboard →</button>
+    <div class="err-msg" id="err-msg">❌ Password salah atau gagal terhubung. Coba lagi.</div>
+    <p class="hint">Password default: <strong>guru1447</strong> — bisa diganti di kode Apps Script</p>
+  </div>
+</div>
+
+<div class="dashboard" id="dashboard">
+  <div class="topbar">
+    <div>
+      <h1>📊 Dashboard Guru — Ramadhan 1447 H</h1>
+      <div class="sub">SD Negeri 1 Tanggulturus | Gerry Lanang Yufrantono, S.Pd.</div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn btn-refresh" onclick="loadAllStudents()">🔄 Refresh</button>
+      <button class="tb-btn btn-export" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="tb-btn btn-logout" onclick="guruLogout()" style="border:1.5px solid rgba(255,255,255,.12)">Keluar</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stats-grid">
+      <div class="stat-card c-gold"><div class="s-num" id="st-siswa">—</div><div class="s-label">Total Siswa</div></div>
+      <div class="stat-card c-green"><div class="s-num" id="st-aktif">—</div><div class="s-label">Aktif Hari ke-<span id="st-day">?</span></div></div>
+      <div class="stat-card c-red"><div class="s-num" id="st-belum">—</div><div class="s-label">Belum Pernah Isi</div></div>
+      <div class="stat-card c-blue"><div class="s-num" id="st-puasa">—</div><div class="s-label">Rata-rata Puasa</div></div>
+      <div class="stat-card c-purple"><div class="s-num" id="st-ayat">—</div><div class="s-label">Total Ayat</div></div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('semua')">👥 Semua Siswa</button>
+      <button class="tab-btn" onclick="switchTab('belum')">⚠️ Belum Mengisi</button>
+      <button class="tab-btn" onclick="switchTab('grafik')">📈 Grafik</button>
+    </div>
+
+    <div id="tab-semua" class="tab-content active">
+      <div class="filters">
+        <input class="search-input" id="search" placeholder="🔍 Cari nama siswa..." oninput="filterTable()">
+        <select class="filter-select" id="filter-kelas" onchange="filterTable()">
+          <option value="">Semua Kelas</option>
+          <option>Kelas 1</option><option>Kelas 2</option><option>Kelas 3</option>
+          <option>Kelas 4</option><option>Kelas 5</option><option>Kelas 6</option>
+        </select>
+        <select class="filter-select" id="filter-status" onchange="filterTable()">
+          <option value="">Semua Status</option>
+          <option value="aktif">Sudah Mengisi</option>
+          <option value="belum">Belum Pernah</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th class="left">Nama Siswa</th><th>Kelas</th><th>Hari Terisi</th>
+            <th>Puasa</th><th>Sholat Sempurna</th><th>Tarawih</th>
+            <th>Total Ayat</th><th>Hafalan Lancar</th><th>Progress</th><th>Aksi</th>
+          </tr></thead>
+          <tbody id="students-tbody"></tbody>
+        </table>
+      </div>
+      <div class="detail-panel" id="detail-panel">
+        <h3 id="detail-title">Detail Siswa</h3>
+        <div class="detail-stats" id="detail-stats"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Hari</th><th>Puasa</th><th>Subuh</th><th>Dzuhur</th><th>Ashar</th><th>Maghrib</th><th>Isya</th><th>Tarawih</th><th>Doa Buka</th><th>Niat</th><th>Ayat</th><th>Hafalan</th><th>Status</th></tr></thead>
+            <tbody id="detail-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-belum" class="tab-content">
+      <p style="font-size:.85rem;color:rgba(255,248,236,.4);margin-bottom:14px">Siswa yang belum pernah mengisi sama sekali:</p>
+      <div class="belum-grid" id="belum-grid"></div>
+    </div>
+
+    <div id="tab-grafik" class="tab-content">
+      <div class="chart-section">
+        <h3>📅 Jumlah Siswa Aktif per Hari Ramadhan</h3>
+        <div class="bar-chart" id="bar-chart"></div>
+      </div>
+      <div class="chart-section">
+        <h3>🏫 Statistik per Kelas</h3>
+        <div class="kelas-grid" id="kelas-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================================================
+// 🔧 https://script.google.com/macros/s/AKfycbz1LPkxTJ4li04qFcAHtq0yUPIx7F7HDu4IZJFFYOvOmW7quXhe0d65rxwPUzuuF19Kbw/exec
+// =====================================================
+const API_URL = https://script.google.com/macros/s/AKfycbz1LPkxTJ4li04qFcAHtq0yUPIx7F7HDu4IZJFFYOvOmW7quXhe0d65rxwPUzuuF19Kbw/exec;
+// =====================================================
+
+const TOTAL_DAYS=30, UNLOCKED_DAYS=3;
+const SK=['subuh','dzuhur','ashar','maghrib','isya'],TK=['puasa','tarawih','doa-buka','niat-puasa'];
+let allStudents=[],filteredStudents=[],savedPassword='';
+
+const SURAH_LIST=[{n:1,nama:"Al-Fatihah"},{n:2,nama:"Al-Baqarah"},{n:3,nama:"Ali 'Imran"},{n:36,nama:"Ya Sin"},{n:55,nama:"Ar-Rahman"},{n:67,nama:"Al-Mulk"},{n:78,nama:"An-Naba"},{n:87,nama:"Al-A'la"},{n:93,nama:"Ad-Duha"},{n:97,nama:"Al-Qadr"},{n:103,nama:"Al-'Asr"},{n:108,nama:"Al-Kausar"},{n:109,nama:"Al-Kafirun"},{n:110,nama:"An-Nasr"},{n:112,nama:"Al-Ikhlas"},{n:113,nama:"Al-Falaq"},{n:114,nama:"An-Nas"}];
+function getSurah(n){return SURAH_LIST.find(s=>s.n==n)||{nama:'Surah '+n};}
+
+window.guruLogin=async function(){
+  const pass=document.getElementById('guru-pass').value;
+  if(!pass){document.getElementById('err-msg').style.display='block';return;}
+  document.querySelector('.guru-login-btn').textContent='Memuat...';
+  document.querySelector('.guru-login-btn').disabled=true;
+  savedPassword=pass;
+  const ok=await loadAllStudents(pass);
+  document.querySelector('.guru-login-btn').textContent='Masuk Dashboard →';
+  document.querySelector('.guru-login-btn').disabled=false;
+  if(ok){
+    document.getElementById('guru-login').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    sessionStorage.setItem('guru_pass',pass);
+  } else {
+    document.getElementById('err-msg').style.display='block';
+  }
+};
+
+window.guruLogout=function(){
+  sessionStorage.removeItem('guru_pass');
+  document.getElementById('guru-login').style.display='flex';
+  document.getElementById('dashboard').style.display='none';
+};
+
+window.loadAllStudents=async function(pass){
+  const pw=pass||savedPassword||sessionStorage.getItem('guru_pass');
+  if(!pw)return false;
+  const tbody=document.getElementById('students-tbody');
+  tbody.innerHTML=`<tr><td colspan="10" class="empty-table"><div class="loading-state"><span class="spin">⏳</span>Memuat data dari Google Sheets...</div></td></tr>`;
+  try{
+    const res=await fetch(`${API_URL}?action=loadAll&password=${encodeURIComponent(pw)}`);
+    const json=await res.json();
+    if(!json.success){return false;}
+    allStudents=json.students||[];
+    allStudents.sort((a,b)=>{if(a.kelas<b.kelas)return -1;if(a.kelas>b.kelas)return 1;return a.nama.localeCompare(b.nama);});
+    filteredStudents=[...allStudents];
+    renderStats();renderTable();renderBelum();renderGrafik();
+    showToast(`✅ ${allStudents.length} siswa dimuat`);
+    return true;
+  }catch(e){
+    tbody.innerHTML=`<tr><td colspan="10" class="empty-table">Gagal memuat. Periksa koneksi & URL Apps Script.</td></tr>`;
+    return false;
+  }
+};
+
+function getStats(s){
+  let hT=0,hP=0,hS=0,tA=0,hTr=0,hHaf=0;
+  for(let d=1;d<=TOTAL_DAYS;d++){
+    const dd=s.days[d]||{};const sholat=dd.sholat||{};
+    const ch=SK.filter(k=>sholat[k]).length+TK.filter(k=>dd[k]).length;
+    const ay=(dd.tadarus||[]).reduce((sum,t)=>sum+Math.max(0,(t.ayatTo||1)-(t.ayatFrom||1)+1),0);
+    if(ch>0||ay>0)hT++;if(dd.puasa)hP++;if(SK.every(k=>sholat[k]))hS++;if(dd.tarawih)hTr++;tA+=ay;
+    hHaf+=(dd.hafalan||[]).filter(h=>h.status==='lancar').length;
+  }
+  return{hT,hP,hS,tA,hTr,hHaf};
+}
+
+function renderStats(){
+  document.getElementById('st-siswa').textContent=allStudents.length;
+  document.getElementById('st-day').textContent=UNLOCKED_DAYS;
+  const aktif=allStudents.filter(s=>{const dd=s.days[UNLOCKED_DAYS]||{};return SK.filter(k=>(dd.sholat||{})[k]).length+TK.filter(k=>dd[k]).length>0;}).length;
+  document.getElementById('st-aktif').textContent=aktif;
+  document.getElementById('st-belum').textContent=allStudents.filter(s=>getStats(s).hT===0).length;
+  const avg=allStudents.length?Math.round(allStudents.reduce((s,st)=>s+getStats(st).hP,0)/allStudents.length)+' hr':'—';
+  document.getElementById('st-puasa').textContent=avg;
+  document.getElementById('st-ayat').textContent=allStudents.reduce((s,st)=>s+getStats(st).tA,0).toLocaleString();
+}
+
+function renderTable(){
+  const tbody=document.getElementById('students-tbody');
+  if(!filteredStudents.length){tbody.innerHTML=`<tr><td colspan="10" class="empty-table">Tidak ada siswa ditemukan.</td></tr>`;return;}
+  tbody.innerHTML='';
+  filteredStudents.forEach(s=>{
+    const st=getStats(s);const pct=Math.round((st.hT/TOTAL_DAYS)*100);
+    const fillColor=pct>=70?'var(--green)':pct>=40?'var(--gold)':'var(--red)';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="left" style="font-weight:700">${s.nama}</td>
+      <td><span class="badge badge-kelas">${s.kelas||'—'}</span></td>
+      <td>${st.hT}<span style="color:rgba(255,255,255,.25);font-size:.72rem">/30</span></td>
+      <td>${st.hP}</td><td>${st.hS}</td><td>${st.hTr}</td>
+      <td style="color:var(--gold-light);font-weight:700">${st.tA}</td>
+      <td>${st.hHaf} surah</td>
+      <td style="min-width:75px">
+        <div style="font-size:.72rem;font-weight:700;color:${fillColor}">${pct}%</div>
+        <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${fillColor}"></div></div>
+      </td>
+      <td><button class="detail-btn" onclick="showDetail('${s.uid}')">Detail</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+window.filterTable=function(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const kelas=document.getElementById('filter-kelas').value;
+  const status=document.getElementById('filter-status').value;
+  filteredStudents=allStudents.filter(s=>{
+    if(q&&!s.nama.toLowerCase().includes(q))return false;
+    if(kelas&&s.kelas!==kelas)return false;
+    if(status==='aktif'&&getStats(s).hT===0)return false;
+    if(status==='belum'&&getStats(s).hT>0)return false;
+    return true;
+  });
+  renderTable();
+};
+
+window.showDetail=function(uid){
+  const s=allStudents.find(x=>x.uid===uid);if(!s)return;
+  const st=getStats(s);
+  document.getElementById('detail-title').textContent=`📋 ${s.nama} — ${s.kelas}`;
+  document.getElementById('detail-stats').innerHTML=`
+    <div class="ds"><div class="dn" style="color:var(--gold)">${st.hT}</div><div class="dl">Hari Terisi</div></div>
+    <div class="ds"><div class="dn" style="color:var(--green)">${st.hP}</div><div class="dl">Hari Puasa</div></div>
+    <div class="ds"><div class="dn" style="color:var(--teal-light)">${st.hS}</div><div class="dl">Sholat Sempurna</div></div>
+    <div class="ds"><div class="dn" style="color:var(--purple-light||'#A87FE8')">${st.hTr}</div><div class="dl">Tarawih</div></div>
+    <div class="ds"><div class="dn" style="color:var(--gold-light)">${st.tA}</div><div class="dl">Total Ayat</div></div>
+    <div class="ds"><div class="dn" style="color:var(--green)">${st.hHaf}</div><div class="dl">Hafalan Lancar</div></div>`;
+  const tbody=document.getElementById('detail-tbody');tbody.innerHTML='';
+  for(let d=1;d<=TOTAL_DAYS;d++){
+    const dd=s.days[d]||{};const sholat=dd.sholat||{};
+    const ay=(dd.tadarus||[]).reduce((sum,t)=>sum+Math.max(0,(t.ayatTo||1)-(t.ayatFrom||1)+1),0);
+    const ch=SK.filter(k=>sholat[k]).length+TK.filter(k=>dd[k]).length;
+    const hasData=ch>0||ay>0;
+    const badge=!hasData?`<span class="badge badge-none">—</span>`:ch>=8?`<span class="badge badge-full">Sempurna</span>`:`<span class="badge" style="background:rgba(245,166,35,.2);color:var(--gold)">Sebagian</span>`;
+    const cv=v=>v?`<span class="check-y">✓</span>`:`<span class="check-n">−</span>`;
+    const hfTxt=(dd.hafalan||[]).map(h=>h.status==='lancar'?'⭐':'🔄').join('')||'−';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-family:'Baloo 2',cursive;font-weight:700;color:var(--gold-light)">${d}</td>
+      <td>${cv(dd.puasa)}</td><td>${cv(sholat.subuh)}</td><td>${cv(sholat.dzuhur)}</td>
+      <td>${cv(sholat.ashar)}</td><td>${cv(sholat.maghrib)}</td><td>${cv(sholat.isya)}</td>
+      <td>${cv(dd.tarawih)}</td><td>${cv(dd['doa-buka'])}</td><td>${cv(dd['niat-puasa'])}</td>
+      <td style="color:var(--gold-light);font-weight:700">${ay||'−'}</td><td>${hfTxt}</td><td>${badge}</td>`;
+    tbody.appendChild(tr);
+  }
+  const panel=document.getElementById('detail-panel');panel.classList.add('open');panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+
+function renderBelum(){
+  const grid=document.getElementById('belum-grid');
+  const belum=allStudents.filter(s=>getStats(s).hT===0);
+  if(!belum.length){grid.innerHTML='<div style="color:var(--green);font-weight:700;padding:20px">🎉 Semua siswa sudah pernah mengisi!</div>';return;}
+  grid.innerHTML='';
+  belum.forEach(s=>{const div=document.createElement('div');div.className='belum-card';div.innerHTML=`<span style="font-size:1.6rem">😴</span><div><div class="bc-nama">${s.nama}</div><div class="bc-kelas">${s.kelas||'—'}</div></div>`;grid.appendChild(div);});
+}
+
+function renderGrafik(){
+  const chart=document.getElementById('bar-chart');chart.innerHTML='';
+  const maxS=Math.max(allStudents.length,1);
+  for(let d=1;d<=TOTAL_DAYS;d++){
+    const count=d<=UNLOCKED_DAYS?allStudents.filter(s=>{const dd=s.days[d]||{};return SK.filter(k=>(dd.sholat||{})[k]).length+TK.filter(k=>dd[k]).length>0;}).length:0;
+    const h=Math.round((count/maxS)*120);
+    const col=document.createElement('div');col.className='bar-col';
+    col.innerHTML=`<div class="b-val">${d<=UNLOCKED_DAYS?count:''}</div><div class="b-bar" style="height:${d<=UNLOCKED_DAYS?h:4}px;${d>UNLOCKED_DAYS?'background:rgba(255,255,255,.06)':''}"></div><div class="b-label" style="${d>UNLOCKED_DAYS?'color:rgba(255,255,255,.1)':''}">H${d}</div>`;
+    chart.appendChild(col);
+  }
+  const kelas=document.getElementById('kelas-grid');kelas.innerHTML='';
+  ['Kelas 1','Kelas 2','Kelas 3','Kelas 4','Kelas 5','Kelas 6'].forEach(k=>{
+    const siswa=allStudents.filter(s=>s.kelas===k);if(!siswa.length)return;
+    const avg=f=>siswa.length?(siswa.reduce((s,st)=>s+getStats(st)[f],0)/siswa.length).toFixed(1):'0';
+    const div=document.createElement('div');div.className='kelas-card';
+    div.innerHTML=`<h4>${k} <span style="color:rgba(255,255,255,.25);font-weight:400;font-size:.78rem">(${siswa.length} siswa)</span></h4>
+      <div class="kr"><span class="krl">Rata hari terisi</span><span class="krv">${avg('hT')} / 30</span></div>
+      <div class="kr"><span class="krl">Rata hari puasa</span><span class="krv">${avg('hP')} hari</span></div>
+      <div class="kr"><span class="krl">Rata sholat sempurna</span><span class="krv">${avg('hS')} hari</span></div>
+      <div class="kr"><span class="krl">Total ayat tadarus</span><span class="krv">${siswa.reduce((s,st)=>s+getStats(st).tA,0)}</span></div>`;
+    kelas.appendChild(div);
+  });
+}
+
+window.exportCSV=function(){
+  let csv='Nama,Kelas,Hari Terisi,Hari Puasa,Sholat Sempurna,Tarawih,Total Ayat,Hafalan Lancar\n';
+  allStudents.forEach(s=>{const st=getStats(s);csv+=`"${s.nama}","${s.kelas}",${st.hT},${st.hP},${st.hS},${st.hTr},${st.tA},${st.hHaf}\n`;});
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='rekap_ramadhan_1447H.csv';a.click();URL.revokeObjectURL(url);
+  showToast('✅ CSV berhasil diunduh!');
+};
+
+window.switchTab=function(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['semua','belum','grafik'][i]===tab));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+};
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// Auto login
+(async()=>{const p=sessionStorage.getItem('guru_pass');if(p){savedPassword=p;const ok=await loadAllStudents(p);if(ok){document.getElementById('guru-login').style.display='none';document.getElementById('dashboard').style.display='block';}}})();
+</script>
+</body>
+</html>
