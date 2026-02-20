@@ -217,7 +217,18 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbz1LPkxTJ4li04qFcAHtq0yUPIx7F7HDu4IZJFFYOvOmW7quXhe0d65rxwPUzuuF19Kbw/exec";
 // =====================================================
 
-const TOTAL_DAYS=30, UNLOCKED_DAYS=3;
+const TOTAL_DAYS=30;
+// Ramadhan 1 = 19 Februari 2026 (sama dengan index.html)
+const RAMADHAN_START_GURU = new Date(2026, 1, 19);
+function getUnlockedDaysGuru() {
+  const now = new Date();
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startMidnight = new Date(RAMADHAN_START_GURU.getFullYear(), RAMADHAN_START_GURU.getMonth(), RAMADHAN_START_GURU.getDate());
+  const diffDays = Math.floor((todayMidnight - startMidnight) / 86400000);
+  return Math.min(Math.max(diffDays + 1, 0), TOTAL_DAYS);
+}
+// Alias agar kode lama tetap jalan
+Object.defineProperty(window, 'UNLOCKED_DAYS', { get: getUnlockedDaysGuru });
 const SK=['subuh','dzuhur','ashar','maghrib','isya'],TK=['puasa','tarawih','doa-buka','niat-puasa'];
 let allStudents=[],filteredStudents=[],savedPassword='';
 
@@ -283,8 +294,9 @@ function getStats(s){
 
 function renderStats(){
   document.getElementById('st-siswa').textContent=allStudents.length;
-  document.getElementById('st-day').textContent=UNLOCKED_DAYS;
-  const aktif=allStudents.filter(s=>{const dd=s.days[UNLOCKED_DAYS]||{};return SK.filter(k=>(dd.sholat||{})[k]).length+TK.filter(k=>dd[k]).length>0;}).length;
+  const _ud=getUnlockedDaysGuru();
+  document.getElementById('st-day').textContent=_ud>0?_ud:'?';
+  const aktif=allStudents.filter(s=>{const dd=s.days[_ud]||{};return SK.filter(k=>(dd.sholat||{})[k]).length+TK.filter(k=>dd[k]).length>0;}).length;
   document.getElementById('st-aktif').textContent=aktif;
   document.getElementById('st-belum').textContent=allStudents.filter(s=>getStats(s).hT===0).length;
   const avg=allStudents.length?Math.round(allStudents.reduce((s,st)=>s+getStats(st).hP,0)/allStudents.length)+' hr':'—';
